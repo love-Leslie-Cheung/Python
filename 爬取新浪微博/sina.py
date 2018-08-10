@@ -1,5 +1,6 @@
 import requests,re,threading,time
 
+# 只能抓取部分评论，否则ip暂时被封
 def sina():
 	ii=1 #从第一页开始
 	while ii<500:
