@@ -68,15 +68,18 @@ def auto_scatter():
 def histogram(s,num,title,xtitle,ytitle):
 	max_num = num
 	frequencies = []
+	ff = []
 	for i in range(0,max_num):
 		frequency = s[i]
 		frequencies.append(frequency[1])
-	# print(frequencies)
+	print(frequencies)
 	# 对结果进行可视化
 	hist = pygal.Bar()
 	hist.x_labels = [s[j][0] for j in range(0,max_num)]
 	hist.x_title = xtitle
 	hist.y_title = ytitle
+	hist.y_labels = [str(abs(i)) for i in range(-10000,12000,2000)]
+
 
 	hist.add(title,frequencies)
 	hist.render_to_file('test.svg')

@@ -2,6 +2,8 @@ import requests
 import re
 import csv
 
+# 爬取猫眼 TOP100 榜
+
 def get_page(url,page=0):
 	url = url + '?offset=' + str(page*10)
 	header={    #请求头部
@@ -41,7 +43,7 @@ def do_file(movie):
 		for item in movie:
 			for line in item:
 				writer.writerow([line['index'],line['title'],'',line['star'],'','','',line['releasetime'],'','',line['src'],'',line['img']])
-				
+
 
 
 def main():
