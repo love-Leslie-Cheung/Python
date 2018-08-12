@@ -169,7 +169,7 @@ def population():
 	# wm.add('2016',cc_populations)
 	# wm.add('Asia',['cn','pk','np','th','kp','kr'])
 	# wm.add('North America', ['ca', 'mx', 'us'])
-	wm.render_to_file('americas.svg')
+	wm.render_to_file('World_Population.svg')
 
 
 

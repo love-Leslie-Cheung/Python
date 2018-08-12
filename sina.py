@@ -1,4 +1,5 @@
 import requests,re,threading
+
 def sina():
 	ii=0 #从第一页开始
 	while ii<10:
