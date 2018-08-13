@@ -37,13 +37,20 @@ def histogram(s,num,title,xtitle,ytitle):
 	hist.add(title,name)
 	hist.render_to_file('test.svg')
 
+def my_bar():
+	attr = ["{}天".format(i) for i in range(1,31)]
+	v1 = [randint(1, 30) for _ in range(30)]
+	bar = Bar("Bar - datazoom - inside 示例")
+	bar.add("",attr,v1,is_datazoom_show=True,datazoom_type="both",datazoom_range=[10, 25],)
+	bar.render()
+
 def main():
 	url = 'https://box.maoyan.com/promovie/api/box/second.json'
 	result = get_day(url,'20180811')
 	histogram(result,10,'2018-08-11','影片','总票房&综合票房')
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':	
 	main()
 
 
