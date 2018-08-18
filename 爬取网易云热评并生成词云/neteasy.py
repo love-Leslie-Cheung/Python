@@ -5,6 +5,9 @@ import urllib.parse
 import json
 import time
 import os
+from neteasy_encrypt import encrypt
+
+num = 0
 
 
 # 获取歌单歌曲信息
@@ -75,27 +78,29 @@ def get_hotComments(list_path,id,song_name):
         fhandle.write(str(num)+'.'+ item['user']['nickname'] +'：\t'+time.strftime('%Y-%m-%d %H:%M:%S', st)+ '(点赞' + str(item['likedCount']) +')\n\t')
         fhandle.write(item['content']+ '\n')
     fhandle.close()
+    return json_dict['total']
 
-# 获取20条最新评论
-def get_Comments(list_path,id,song_name):
+
+# 获取所有评论
+def get_Comments(list_path,id,song_name,data,page):
+    global num
     url='http://music.163.com/weapi/v1/resource/comments/R_SO_4_' + id + '?csrf_token='   #歌评url
     header={    #请求头部
    'User-Agent':'Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36'
    }
     #post请求表单数据
-    data={'params':'B78zCl17nXvGyj8AY6VzmwUQF+kzD12zj+F6MX7jruwpd33mMeTTuWpt1x4YP85Vd+shMqs0qrqy0sNxJiJOdszxintXdI1ezifUrO5EelBe85DCKgyQmg8TyZCVAgZLYMxRUMIiAibhnwyjv5rGMhaje7DarJoH771Q1ZXxrrzIK9tlDstoeJT6SHA4vZT9','encSecKey':'df0a685d2e2d2866a2f58c0fcbae4ebfd2099cb4daffbce3b47861c471143a7c1697914fec4e11f3cecead45422d16cf422239b561b48f425d3d2f8933e997a522fde18a44a48a7415750aaef5f5ddac2769352b133d54c31d1d70ef7e91b3683680cd30280aad49e50ea1be2c0ba8bc7d8df4f61026c037a6d0a4a56ed86dc0'}
+    # data={'params':'B78zCl17nXvGyj8AY6VzmwUQF+kzD12zj+F6MX7jruwpd33mMeTTuWpt1x4YP85Vd+shMqs0qrqy0sNxJiJOdszxintXdI1ezifUrO5EelBe85DCKgyQmg8TyZCVAgZLYMxRUMIiAibhnwyjv5rGMhaje7DarJoH771Q1ZXxrrzIK9tlDstoeJT6SHA4vZT9','encSecKey':'df0a685d2e2d2866a2f58c0fcbae4ebfd2099cb4daffbce3b47861c471143a7c1697914fec4e11f3cecead45422d16cf422239b561b48f425d3d2f8933e997a522fde18a44a48a7415750aaef5f5ddac2769352b133d54c31d1d70ef7e91b3683680cd30280aad49e50ea1be2c0ba8bc7d8df4f61026c037a6d0a4a56ed86dc0'}
     postdata=urllib.parse.urlencode(data).encode('utf8')  #进行编码
     request=urllib.request.Request(url,headers=header,data=postdata)
     reponse=urllib.request.urlopen(request).read().decode('utf8')
     json_dict=json.loads(reponse)   #获取json
     comment=json_dict['comments']  #获取json中的热门评论
 
-
-    num=0
     fhandle=open(list_path + '/'+ song_name+'.txt','a',encoding='utf-8')  #写入文件
-    fhandle.write('最新评论('+ str(json_dict['total']) +')：\n')
+    fhandle.write('最新评论('+ str(json_dict['total']) +')' + '\t第'+str(page)+'页' + '：\n')
     for item in comment:
         num+=1
+        print(num)  #=================================打印次数
         st = time.localtime(item['time']/1000)
         fhandle.write(str(num)+'.'+ item['user']['nickname'] + ': ' +time.strftime('%Y-%m-%d %H:%M:%S', st) +'('+ str(item['likedCount']) +'赞):\n\t')
         fhandle.write(item['content']+'\n')
@@ -103,15 +108,23 @@ def get_Comments(list_path,id,song_name):
     fhandle.close()
 
 
-list_path,list_id,list_title = get_list_song('380179013')
-list_path = './' + list_path
-if not os.path.exists(list_path):
-	os.mkdir('./' + list_path)
-for i in range(0,len(list_id)):
-	try:
-		print('正在获取' + list_title[i] + '的热评')
-		list_title[i] = list_title[i].replace('/','.')
-		# get_hotComments(list_path,list_id[i],list_title[i])
-		# get_Comments(list_path,list_id[i],list_title[i])
-	except Exception as e:
-		print(e)
+def main():
+    list_path,list_id,list_title = get_list_song('380179013')
+    list_path = './' + list_path
+    if not os.path.exists(list_path):
+        os.mkdir('./' + list_path)
+    for i in range(0,1):#len(list_id)):
+        try:
+            print('正在获取' + list_title[i] + '的热评')
+            list_title[i] = list_title[i].replace('/','.')
+            count = get_hotComments(list_path,list_id[i],list_title[i])//20
+            for j in range(1,count+1):
+                print("正在获取第%d页..." % j)
+                data = encrypt(list_id[i],j)
+                get_Comments(list_path,list_id[i],list_title[i],data,j)
+        except Exception as e:
+            print(e)
+
+
+if __name__ == '__main__':
+    main()

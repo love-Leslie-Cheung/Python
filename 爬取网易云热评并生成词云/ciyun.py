@@ -14,7 +14,7 @@ from PIL import Image, ImageDraw, ImageFont
 # 绘制词云
 def draw_wordcloud():
     #读入一个txt文件
-    comment_text = open('C:/Users/soft/Desktop/西游记.txt','r',encoding='gb18030').read()
+    comment_text = open('./常听/齐天.txt','r',encoding='utf-8').read()
     #结巴分词，生成字符串，如果不通过分词，无法直接生成正确的中文词云
     cut_text = " ".join(jieba.cut(comment_text))
     d = path.dirname(__file__) # 当前文件文件夹所在目录

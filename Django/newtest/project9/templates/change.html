@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>修改密码</title>
+	<script type="text/javascript" src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var registerd = true;
+			$('#user_name').focusout(function(){
+				var name = $('#user_name').val();
+				if (name !== '') {
+					$.getJSON("/project9/check/", {'user_name': name},function(result){
+						if (result === 100) {
+							$('#msg_user').html('');
+							registerd = true;
+						}else if (result === 200) {
+							$('#msg_user').html('用户名不存在！')
+							registerd = false;
+						}
+					})
+				}else{
+					$('#msg_user').html('请输入用户名！');
+				}
+			});
+
+			$('#submit').click(function(){
+				var name = $('#user_name').val();
+				var pwd = $('#password').val();
+				if(registerd && name !== '' && pwd !== ''){
+					$.getJSON("/project9/changepwd/", {'user_name': name, 'password': pwd}, function(result){
+						if (result["status"] === 100) {
+							$('#msg_up').html('抱歉，密码修改失败！');
+						}
+						if (result["status"] === 200) {
+							$('#msg_up').html('恭喜你，密码修改成功！');
+						}
+					})
+				}
+			});
+		})
+	</script>
+</head>
+<body>
+	<h3>修改密码</h3>
+	<input type="text" name="user_name" id="user_name">
+	<label id="msg_user"></label><br>
+	<input type="password" name="password" id="password"><br><br>
+	<button type="button" id="submit">提交</button>
+	<label id="msg_up"></label>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>搜索结果</title>
+</head>
+<body>
+	<h3>搜索结果</h3>
+	<ol>
+		{% for goods_info in goods_list %}
+		<li>
+			<label>名称：{{ goods_info.goods_name }}</label>
+			<label>数量：{{ goods_info.goods_number }}</label>
+			<label>价格：{{ goods_info.goods_price }}</label>
+		</li>
+		{% empty %}
+			没有查询结果！
+		{% endfor %}
+	</ol>
+</body>
+</html>

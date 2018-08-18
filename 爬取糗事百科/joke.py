@@ -5,6 +5,8 @@ import urllib.error
 import urllib.parse
 import time
 
+# 爬取糗事百科段子
+
 page = 1
 head = ['Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50',
 'Mozilla/5.0 (Windows; U; Windows NT 6.1; en-us) AppleWebKit/534.50 (KHTML, like Gecko) Version/5.1 Safari/534.50',
@@ -23,7 +25,7 @@ def get_joke_list(page):
     }
     request=urllib.request.Request(url=url, headers=header)
     html=urllib.request.urlopen(request).read().decode('utf8')
-    # print(html)
+    print(html)
     pat_id = r'<a href="/article/(\d*)" target="_blank" class="contentHerf"'
     result_id = re.compile(pat_id).findall(html)
     return result_id
